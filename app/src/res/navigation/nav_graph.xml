@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragment_home">
+
+    <fragment
+        android:id="@+id/fragment_home"
+        android:name="com.example.damnvulnerablemobileapp.HomeFragment"
+        android:label="@string/nav_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/fragment_vulnerabilities_menu"
+        android:name="com.example.damnvulnerablemobileapp.VulnerabilitiesMenuFragment"
+        android:label="@string/nav_vulnerabilities"
+        tools:layout="@layout/fragment_vulnerabilities_menu" >
+        <action
+            android:id="@+id/action_fragment_vulnerabilities_menu_to_vulnerabilitiesLoggingFragment"
+            app:destination="@id/vulnerabilitiesLoggingFragment" />
+        <action
+            android:id="@+id/action_fragment_vulnerabilities_menu_to_vulnerabilitiesStorageFragment"
+            app:destination="@id/vulnerabilitiesStorageFragment" />
+        <action
+            android:id="@+id/action_fragment_vulnerabilities_menu_to_vulnerabilitiesAuthenticationFragment"
+            app:destination="@id/vulnerabilitiesAuthenticationFragment" />
+        <action
+            android:id="@+id/action_fragment_vulnerabilities_menu_to_vulnerabilitiesBroadcastFragment"
+            app:destination="@id/vulnerabilitiesBroadcastFragment" />
+        <action
+            android:id="@+id/action_fragment_vulnerabilities_menu_to_vulnerabilitiesActivityFragment"
+            app:destination="@id/vulnerabilitiesActivityFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_guides_menu"
+        android:name="com.example.damnvulnerablemobileapp.GuidesMenuFragment"
+        android:label="@string/nav_guides"
+        tools:layout="@layout/fragment_guides_menu" >
+        <action
+            android:id="@+id/action_fragment_guides_menu_to_guidesAuthenticationFragment"
+            app:destination="@id/guidesAuthenticationFragment" />
+        <action
+            android:id="@+id/action_fragment_guides_menu_to_guidesBroadcastFragment"
+            app:destination="@id/guidesBroadcastFragment" />
+        <action
+            android:id="@+id/action_fragment_guides_menu_to_guidesActivityFragment"
+            app:destination="@id/guidesActivityFragment" />
+        <action
+            android:id="@+id/action_fragment_guides_menu_to_guidesLoggingFragment"
+            app:destination="@id/guidesLoggingFragment" />
+        <action
+            android:id="@+id/action_fragment_guides_menu_to_guidesStorageFragment"
+            app:destination="@id/guidesStorageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_settings_menu"
+        android:name="com.example.damnvulnerablemobileapp.SettingsMenuFragment"
+        android:label="@string/nav_settings"
+        tools:layout="@layout/fragment_settings_menu" />
+    <fragment
+        android:id="@+id/vulnerabilitiesLoggingFragment"
+        android:name="com.example.damnvulnerablemobileapp.VulnerabilitiesLoggingFragment"
+        android:label="@string/txt_vulnerabilities_logging_title"
+        tools:layout="@layout/fragment_vulnerabilities_logging" />
+    <fragment
+        android:id="@+id/vulnerabilitiesStorageFragment"
+        android:name="com.example.damnvulnerablemobileapp.VulnerabilitiesStorageFragment"
+        android:label="VulnerabilitiesStorageFragment"
+        tools:layout="@layout/fragment_vulnerabilities_storage" />
+    <fragment
+        android:id="@+id/vulnerabilitiesAuthenticationFragment"
+        android:name="com.example.damnvulnerablemobileapp.VulnerabilitiesAuthenticationFragment"
+        android:label="VulnerabilitiesAuthenticationFragment"
+        tools:layout="@layout/fragment_vulnerabilities_authentication" />
+    <fragment
+        android:id="@+id/vulnerabilitiesBroadcastFragment"
+        android:name="com.example.damnvulnerablemobileapp.VulnerabilitiesBroadcastFragment"
+        android:label="VulnerabilitiesBroadcastFragment"
+        tools:layout="@layout/fragment_vulnerabilities_broadcast" />
+    <fragment
+        android:id="@+id/vulnerabilitiesActivityFragment"
+        android:name="com.example.damnvulnerablemobileapp.VulnerabilitiesActivityFragment"
+        android:label="VulnerabilitiesActivityFragment"
+        tools:layout="@layout/fragment_vulnerabilities_activity" />
+    <fragment
+        android:id="@+id/guidesAuthenticationFragment"
+        android:name="com.example.damnvulnerablemobileapp.GuidesAuthenticationFragment"
+        android:label="GuidesAuthenticationFragment" />
+    <fragment
+        android:id="@+id/guidesBroadcastFragment"
+        android:name="com.example.damnvulnerablemobileapp.GuidesBroadcastFragment"
+        android:label="GuidesBroadcastFragment" />
+    <fragment
+        android:id="@+id/guidesActivityFragment"
+        android:name="com.example.damnvulnerablemobileapp.GuidesActivityFragment"
+        android:label="GuidesActivityFragment" />
+    <fragment
+        android:id="@+id/guidesLoggingFragment"
+        android:name="com.example.damnvulnerablemobileapp.GuidesLoggingFragment"
+        android:label="GuidesLoggingFragment" />
+    <fragment
+        android:id="@+id/guidesStorageFragment"
+        android:name="com.example.damnvulnerablemobileapp.GuidesStorageFragment"
+        android:label="GuidesStorageFragment" >
+        <action
+            android:id="@+id/action_guidesStorageFragment_to_secureStorageFragment"
+            app:destination="@id/secureStorageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/secureStorageFragment"
+        android:name="com.example.damnvulnerablemobileapp.SecureStorageFragment"
+        android:label="SecureStorageFragment" />
+
+</navigation>
