@@ -1,0 +1,178 @@
+<%#
+ Copyright 2013-2020 the original author or authors from the JHipster project.
+
+ This file is part of the JHipster project, see https://www.jhipster.tech/
+ for more information.
+
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+-%>
+package <%= packageName %>.service.dto
+
+<%_
+let { importApiModelProperty, importJsonIgnore, importJsonIgnoreProperties, importSet, uniqueEnums } = _processJavaEntityImports(fields, relationships);
+_%>
+<%_ if (typeof javadoc != 'undefined') { _%>
+import io.swagger.annotations.ApiModel
+<%_ } if (importApiModelProperty === true) { _%>
+import io.swagger.annotations.ApiModelProperty
+<%_ } _%>
+<%_ if (fieldsContainInstant) { _%>
+import java.time.Instant
+<%_ } _%>
+<%_ if (fieldsContainLocalDate) { _%>
+import java.time.LocalDate
+<%_ } _%>
+<%_ if (fieldsContainZonedDateTime) { _%>
+import java.time.ZonedDateTime
+<%_ } _%>
+<%_ if (fieldsContainDuration) { _%>
+import java.time.Duration
+<%_ } _%>
+<%_ if (validation) { _%>
+import javax.validation.constraints.DecimalMax
+import javax.validation.constraints.DecimalMin
+import javax.validation.constraints.Max
+import javax.validation.constraints.Min
+import javax.validation.constraints.NotNull
+import javax.validation.constraints.Pattern
+import javax.validation.constraints.Size
+<%_ } _%>
+import java.io.Serializable
+<%_ if (fieldsContainBigDecimal) { _%>
+import java.math.BigDecimal
+<%_ } _%>
+<%_ if (fieldsContainBlob && databaseType === 'cassandra') { _%>
+import java.nio.ByteBuffer
+<%_ } _%>
+<%_ if (databaseType === 'cassandra' || fieldsContainUUID === true) { _%>
+import java.util.UUID
+<%_ } _%>
+<%_ if (fieldsContainBlob && databaseType === 'sql') { _%>
+import javax.persistence.Lob
+<%_ } _%>
+<%_ Object.keys(uniqueEnums).forEach(function(element) { _%>
+    import <%= packageName %>.domain.enumeration.<%= element %>
+<%_ }); _%>
+<%_
+var mappedRels = [];
+relationships.forEach((relationship) => {
+    if ( (relationship.relationshipType === 'many-to-many' && relationship.ownerSide === true) ||
+        (relationship.relationshipType === 'many-to-one' || (relationship.relationshipType === 'one-to-one' && relationship.ownerSide === true)) ||
+        (relationship.otherEntityFieldCapitalized !== 'Id' && relationship.otherEntityFieldCapitalized !== '')) {
+        // TODO temporary calculation update this later.
+        const oside = relationship.ownerSide || false;
+        if (!(embedded && !relationship.otherEntityIsEmbedded && oside === false)) {
+            mappedRels.push( relationship );
+        }
+    }
+});
+_%>
+
+/**
+ * A DTO for the [<%= packageName %>.domain.<%= asEntity(entityClass) %>] entity.
+ */
+<%_ if (typeof javadoc !== 'undefined') { _%>
+@ApiModel(description = "<%- formatAsApiDescription(javadoc) %>")
+<%_ } _%>
+data class <%= asDto(entityClass) %>(
+    <% if (!embedded) { %>
+    var id: <%= primaryKeyType %>? = null,
+    <%_ } _%>
+    <%_ for (idx in fields) {
+        if (typeof fields[idx].javadoc !== 'undefined') { _%>
+<%- formatAsFieldJavadoc(fields[idx].javadoc) %>
+        <%_ }
+            let required = false;
+            const fieldValidate = fields[idx].fieldValidate;
+            const fieldValidateRules = fields[idx].fieldValidateRules;
+            const fieldValidateRulesMinlength = fields[idx].fieldValidateRulesMinlength;
+            const fieldValidateRulesMaxlength = fields[idx].fieldValidateRulesMaxlength;
+            const fieldValidateRulesMinbytes = fields[idx].fieldValidateRulesMinbytes;
+            const fieldValidateRulesMaxbytes = fields[idx].fieldValidateRulesMaxbytes;
+            const fieldValidateRulesMin = fields[idx].fieldValidateRulesMin;
+            const fieldValidateRulesMax = fields[idx].fieldValidateRulesMax;
+            const fieldValidateRulesPatternJava = fields[idx].fieldValidateRulesPatternJava;
+            const fieldType = fields[idx].fieldType;
+            const fieldTypeBlobContent = fields[idx].fieldTypeBlobContent;
+            const fieldName = fields[idx].fieldName;
+            const comma = ((parseInt(idx, 10) === (fields.length - 1)) && mappedRels.length < 1 ) ?  '' : ',';_%>
+
+    <%_ if (fieldValidate === true) {
+            if (fieldValidateRules.includes('required')) {
+                required = true;
+            } _%>
+    <%- include('../../common/field_validators'); -%>
+    <%_ } _%>
+    <%_ if (typeof fields[idx].javadoc != 'undefined') { _%>
+    @ApiModelProperty(value = "<%- formatAsApiDescription(fields[idx].javadoc) %>"<% if (required) { %>, required = true<% } %>)
+    <%_ } _%>
+    <%_ if (fieldType === 'byte[]' && databaseType === 'sql') { _%>
+    @Lob
+    <%_ } _%>
+    <%_ if (fieldTypeBlobContent !== 'text') { _%>
+    var <%= fieldName %>: <% if(fieldType === 'byte[]') { _%>ByteArray<%_ } else if(fieldType==='Integer'){ _%>Int<%_ } else { _%><%= fieldType %><% } %>? = null<%_ if (fieldType === 'byte[]' || fieldType === 'ByteBuffer') { _%>,<%_ } else { _%><%= comma %><%_ } %>
+    <%_ } else { _%>
+    var <%= fieldName %>: String? = null<%= comma %>
+    <%_ } _%>
+    <%_ if ((fieldType === 'byte[]' || fieldType === 'ByteBuffer') && fieldTypeBlobContent !== 'text') { _%>
+    var <%= fieldName %>ContentType: String? = null<%= comma %>
+        <%_ } _%>
+    <%_ } _%>
+    <%_ mappedRels.forEach( (relationship, index) => {
+        const relationshipFieldName = relationship.relationshipFieldName;
+        const relationshipFieldNamePlural = relationship.relationshipFieldNamePlural;
+        const relationshipType = relationship.relationshipType;
+        const otherEntityPrimaryKeyType = relationship.otherEntityPrimaryKeyType;
+        const otherEntityNameCapitalized = relationship.otherEntityNameCapitalized;
+        const otherEntityFieldCapitalized = relationship.otherEntityFieldCapitalized;
+        const otherEntityIsEmbedded = relationship.otherEntityIsEmbedded;
+        const ownerSide = relationship.ownerSide;
+        var comma = index === (mappedRels.length - 1) ?  '' : ',';
+        if (typeof relationship.javadoc != 'undefined') { _%>
+<%- formatAsFieldJavadoc(relationship.javadoc) %>
+    @ApiModelProperty(value = "<%- formatAsApiDescription(relationship.javadoc) %>")
+    <%_ }
+        if ((relationshipType === 'many-to-many' && ownerSide === true)
+            || (relationshipType === 'one-to-many' && otherEntityIsEmbedded)) { _%>
+
+    var <%= relationshipFieldNamePlural %>: MutableSet<<%= asDto(otherEntityNameCapitalized) %>> = mutableSetOf()<%= comma %>
+    <%_ } else if (relationshipType === 'one-to-one' && ownerSide === true && otherEntityIsEmbedded) { _%>
+    var <%= relationshipFieldName %>: <%= asDto(otherEntityNameCapitalized) %><%= comma %>
+    <%_ } else if (!embedded && (relationshipType === 'many-to-one' || (relationshipType === 'one-to-one' && ownerSide === true))) {
+            if(index === (mappedRels.length - 1) && otherEntityFieldCapitalized !== 'Id' && otherEntityFieldCapitalized !== '') {
+                comma = ',';
+            }
+    _%>
+
+    var <%= relationshipFieldName %>Id: <%= otherEntityPrimaryKeyType %>? = null<%= comma %>
+    <%_ if (otherEntityFieldCapitalized !== 'Id' && otherEntityFieldCapitalized !== '') {
+            comma = index === (mappedRels.length - 1) ?  '' : ',';
+    _%>
+
+    var <%= relationshipFieldName %><%= otherEntityFieldCapitalized %>: String? = null<%= comma %>
+    <%_ } } }); _%>
+
+) : Serializable {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is <%= asDto(entityClass) %>) return false
+        <%_ if (!embedded) { _%>
+        return id!= null && id == other.id
+        <%_ } else { _%>
+        return false
+        <%_ } _%>
+    }
+
+    override fun hashCode() = 31
+}
