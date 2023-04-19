@@ -1,0 +1,39 @@
+name: CodeQL SAST
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  schedule:
+    - cron: '23 9 * * 3'
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'kotlin' ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@d23060145bc9131d50558d5d4185494a20208101 #v2.12.5
+      with:
+        languages: ${{ matrix.language }}
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@d23060145bc9131d50558d5d4185494a20208101 #v2.12.5
