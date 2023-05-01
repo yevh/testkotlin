@@ -8,4 +8,3 @@ updates:
     open-pull-requests-limit: 10
     reviewers:
       - "yevh"
-    versioning-strategy: "auto"
