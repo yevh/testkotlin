@@ -1,7 +1,11 @@
 version: 2
 updates:
-  - package-ecosystem: "auto"
+  # Enable updates for Gradle dependencies (Kotlin)
+  - package-ecosystem: "gradle"
     directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
     open-pull-requests-limit: 10
+    reviewers:
+      - "your-github-username"
+    versioning-strategy: "auto"
