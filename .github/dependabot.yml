@@ -1,0 +1,8 @@
+version: 2
+updates:
+  # Enable updates for Gradle dependencies (Kotlin)
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
